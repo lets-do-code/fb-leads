@@ -1,0 +1,102 @@
+<!-- Preheader (hidden preview text) -->
+<span
+  style='display:none !important;visibility:hidden;mso-hide:all;font-size:1px;color:#ffffff;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;'
+>
+  Use this code to verify your account — it expires in
+  {{expiryMin}}
+  minutes.
+</span>
+
+<table
+  width='100%'
+  cellpadding='0'
+  cellspacing='0'
+  role='presentation'
+  style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#f6f8fb; padding: 24px 0;"
+>
+  <tr>
+    <td align='center'>
+      <table
+        width='600'
+        cellpadding='0'
+        cellspacing='0'
+        role='presentation'
+        style='background:#ffffff; border-radius:8px; overflow:hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06);'
+      >
+        <!-- Header -->
+        <tr>
+          <td style='padding:24px; text-align:left; border-bottom:1px solid #f0f0f5;'>
+            {{#if logoUrl}}
+              <img
+                src='{{logoUrl}}'
+                alt='{{companyName}}'
+                width='120'
+                style='display:block; margin-bottom:8px;'
+              />
+            {{else}}
+              <strong style='font-size:18px;'>{{companyName}}</strong>
+            {{/if}}
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style='padding:28px;'>
+            <h1 style='margin:0 0 14px 0; font-size:20px; line-height:1.25; color:#111827;'>Hi
+              {{recipientName}},</h1>
+
+            <p style='margin:0 0 18px 0; color:#475569; font-size:15px; line-height:1.5;'>
+              Use the following One-Time Password (OTP) to verify your action. This code will expire
+              in
+              <strong>{{expiryMin}} minutes</strong>.
+            </p>
+
+            <!-- OTP block -->
+            <table cellpadding='0' cellspacing='0' role='presentation' style='margin:20px 0;'>
+              <tr>
+                <td
+                  align='center'
+                  style='background:#f7fafc; padding:18px 24px; border-radius:10px;'
+                >
+                  <span
+                    style="font-size:28px; letter-spacing:4px; font-weight:700; color:#0f172a; font-family: 'Courier New', Courier, monospace;"
+                  >
+                    {{otp}}
+                  </span>
+                </td>
+              </tr>
+            </table>
+
+            <p style='margin:0 0 8px 0; color:#475569; font-size:14px;'>
+              If you didn't request this, you can safely ignore this email — no changes will be
+              made.
+            </p>
+
+            <p style='margin:18px 0 0 0; color:#475569; font-size:14px;'>
+              Need help?
+              <a href='mailto:{{supportEmail}}' style='color:#0b74ff; text-decoration:none;'>Contact
+                support</a>.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td
+            style='padding:18px; text-align:center; font-size:12px; color:#9aa4b2; border-top:1px solid #f0f0f5;'
+          >
+            <div style='margin-bottom:6px;'>{{companyName}} • {{companyAddress}}</div>
+            <div>If you didn't request this email, please ignore it.</div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- small mobile spacer -->
+      <div style='height:12px;'></div>
+
+      <div style='font-size:12px; color:#94a3b8; max-width:600px; text-align:center;'>
+        This is an automated message — please do not reply directly to this email.
+      </div>
+    </td>
+  </tr>
+</table>
