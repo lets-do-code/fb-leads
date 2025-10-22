@@ -1,14 +1,18 @@
 import { Router } from 'express';
 import { ROUTES_PATH } from '../constants/apiPaths';
-import userRouter from './user.route';
 import authRouter from './metaAuth.route';
+import webhookRouter from './webhook.route';
+import metaRouter from './meta.route';
+import integrationRouter from './integration.route';
 
 const router: Router = Router();
 
-router.use(ROUTES_PATH.USER, userRouter);
 router.use(ROUTES_PATH.AUTH, authRouter);
+router.use(ROUTES_PATH.WEBHOOK, webhookRouter);
+router.use(ROUTES_PATH.META, metaRouter);
+router.use(ROUTES_PATH.INTEGRATION, integrationRouter);
 // router.use()
 
-router.use(ROUTES_PATH.USER, (req, res) => res.status(404).send('Not Found'));
+// router.use(ROUTES_PATH.META, (req, res) => res.status(404).send('Not Found'));
 
 export default router;

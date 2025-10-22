@@ -5,6 +5,7 @@ import { ENV } from './config/env.ts';
 const PORT = ENV.PORT || 8084;
 
 // start server
+
 (async () => {
   try {
     await connecctDB();

@@ -1,6 +1,3 @@
-// import axios from 'axios';
-// import PageConnection from '../models/PageConnection.model.js';
-// import { Response } from 'express';
 // export const getConnectedPage = async (req: Request, res: Response) => {
 //   try {
 //     // You can later filter by user ID or token if multi-user
