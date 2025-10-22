@@ -13,12 +13,7 @@
     "lint:fix": "eslint --fix",
     "format:fix": "prettier . --write"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "npm run lint:fix",
-      "npm run format:fix"
-    ]
-  },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -5,7 +5,7 @@ import { getNdid } from '../utils/getndid';
 // Extend Express Request type
 
 export interface MyRequest extends Request {
-  user: {
+  user?: {
     Email: string;
   };
 }
@@ -14,7 +14,7 @@ export const getIntegration = async (req: MyRequest, res: Response) => {
   try {
     const user = req.user;
 
-    const ndid = await getNdid(user.Email);
+    const ndid = await getNdid(user?.Email);
 
     const integrations = await IntegrationModel.findOne({ ndid: ndid });
 
