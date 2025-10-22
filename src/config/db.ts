@@ -11,3 +11,5 @@ const connecctDB = async () => {
 };
 
 export default connecctDB;
+
+export const getDB = () => mongoose.connection;

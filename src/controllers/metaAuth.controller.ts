@@ -2,9 +2,13 @@ import axios from 'axios';
 import PageConnection from '../models/PageConnection.model.ts';
 import { Request, Response } from 'express';
 import { ENV } from '../config/env.ts';
-
+import jwt from 'jsonwebtoken';
+import IntegrationModel from '../models/integration.model.ts';
 export const startOAuth = (req: Request, res: Response) => {
-  const redirectUri = `${ENV.META_CONFIG.BACKEND_URL}/auth/meta/callback`;
+  const { ndid } = req.query;
+  console.log(ndid);
+
+  const redirectUri = `${ENV.META_CONFIG.BACKEND_URL}/api/v1/auth/meta/callback`;
   console.log('🔗 Redirect URI (startOAuth):', redirectUri);
 
   const scopes = [
@@ -13,10 +17,14 @@ export const startOAuth = (req: Request, res: Response) => {
     'pages_manage_metadata',
     'instagram_basic',
     'instagram_manage_messages',
-    'pages_messaging'
+    'pages_messaging',
+    'pages_read_engagement',
+    'pages_read_user_content',
+    'pages_manage_ads'
   ].join(',');
 
-  const state = 'secure-random-string-or-jwt 123';
+  // 👇 Securely encode ndid in state (expires in 5 minutes)
+  const state = jwt.sign({ ndid }, 'secure-random-string-or-jwt', { expiresIn: '5m' });
   const authUrl =
     `https://www.facebook.com/v24.0/dialog/oauth?client_id=${ENV.META_CONFIG.APP_ID}` +
     `&redirect_uri=${encodeURIComponent(redirectUri)}` +
@@ -28,11 +36,25 @@ export const startOAuth = (req: Request, res: Response) => {
 };
 
 export const metaCallback = async (req: Request, res: Response) => {
-  const { code } = req.query;
-  if (!code) return res.status(400).send('Missing code');
+  const { code, state } = req.query;
+  if (!code || !state || typeof state !== 'string')
+    return res.status(400).send('Missing or invalid code/state');
 
+  interface JWTPayload {
+    ndid: string;
+  }
+  let decoded;
   try {
-    const redirectUri = `${ENV.META_CONFIG.BACKEND_URL}/auth/meta/callback`;
+    decoded = jwt.verify(state, 'secure-random-string-or-jwt') as JWTPayload;
+  } catch (err) {
+    console.error('❌ Invalid or expired state:', err);
+    return res.status(400).json({ error: 'Invalid or expired state' });
+  }
+
+  const ndid = decoded?.ndid;
+  console.log('✅ Decoded ndid from state:', ndid);
+  try {
+    const redirectUri = `${ENV.META_CONFIG.BACKEND_URL}/api/v1/auth/meta/callback`;
     console.log('🔗 Redirect URI (callback):', redirectUri);
 
     // 1️⃣ Short-lived token
@@ -58,49 +80,68 @@ export const metaCallback = async (req: Request, res: Response) => {
     const longLivedToken = longResp.data.access_token;
 
     // 3️⃣ Get user pages
-    const pagesResp = await axios.get('https://graph.facebook.com/v24.0/me/accounts', {
-      params: { access_token: longLivedToken }
-    });
-
-    const pages = pagesResp.data.data || [];
-    if (!pages.length) {
-      return res.redirect(`${ENV.META_CONFIG.FRONTEND_URL}/integrations?error=no-pages`);
-    }
-
-    // Pick the first for now
-    const page = pages[0];
-    const pageId = page.id;
-    const pageName = page.name;
-    const pageAccessToken = page.access_token;
-
-    // 4️⃣ Get connected Instagram
-    const igResp = await axios.get(`https://graph.facebook.com/v24.0/${pageId}`, {
-      params: { fields: 'instagram_business_account', access_token: pageAccessToken }
-    });
-    const instagramBusinessId = igResp.data.instagram_business_account?.id || null;
-
-    // 5️⃣ Subscribe page to webhook
-    await axios.post(`https://graph.facebook.com/v24.0/${pageId}/subscribed_apps`, null, {
+    const pagesResp = await axios.get('https://graph.facebook.com/v24.0/me', {
       params: {
-        subscribed_fields: 'messages,messaging_postbacks,leadgen',
-        access_token: pageAccessToken
+        fields: 'id,name,email,picture,accounts',
+        access_token: longLivedToken
       }
     });
 
+    // const pages = pagesResp.data.data || [];
+
+    // console.log('Pages response :', pagesResp);
+    // console.log('Pages data :', pagesResp.data);
+    // console.log('Pages data dataa :', pagesResp.data.data);
+    // console.log('Pages data account:', pagesResp.data.accounts);
+    // console.log('Pages data account data:', pagesResp.data.accounts.data);
+    // if (!pages.length) {
+    //   return res.redirect(`${ENV.META_CONFIG.FRONTEND_URL}/integrations?error=no-pages`);
+    // }
+
+    // const dataToSave={
+    //   "account_id":pagesResp.data.id,
+    //   "account_name":pagesResp.data.name,
+    //   "pages":pagesResp.data.accounts.data
+    // }
+    // // Pick the first for now
+    // const page = pages[0];
+    // const pageId = page.id;
+    // const pageName = page.name;
+    // const pageAccessToken = page.access_token;
+
+    // // 4️⃣ Get connected Instagram
+    // const igResp = await axios.get(`https://graph.facebook.com/v24.0/${pageId}`, {
+    //   params: { fields: 'instagram_business_account', access_token: pageAccessToken }
+    // });
+    // const instagramBusinessId = igResp.data.instagram_business_account?.id || null;
+
+    // // 5️⃣ Subscribe page to webhook
+    // await axios.post(`https://graph.facebook.com/v24.0/${pageId}/subscribed_apps`, null, {
+    //   params: {
+    //     subscribed_fields: 'messages,messaging_postbacks,leadgen',
+    //     access_token: pageAccessToken
+    //   }
+    // });
+
     // 6️⃣ Save connection to DB
-    await PageConnection.findOneAndUpdate(
-      { pageId },
+    const result = await PageConnection.findOneAndUpdate(
+      { account_id: pagesResp.data.id },
       {
-        pageId,
-        pageName,
-        pageAccessToken,
-        instagramBusinessId,
-        longLivedToken
+        $set: {
+          ndid: ndid,
+          account_name: pagesResp.data.name,
+          pages: pagesResp.data?.accounts?.data
+        }
       },
       { upsert: true, new: true }
     );
-
-    res.redirect(`${ENV.META_CONFIG.FRONTEND_URL}/integrations?status=connected`);
+    await IntegrationModel.findOneAndUpdate(
+      { ndid: ndid },
+      { $set: { meta: true } },
+      { upsert: true, new: true }
+    );
+    console.log('bhbdfhbjgdjg', result);
+    res.redirect(`${ENV.META_CONFIG.FRONTEND_URL}/?accountId=${pagesResp.data.id}`);
   } catch (err) {
     // console.error('OAuth error:', err.response?.data || err.message);
     console.log(err);
