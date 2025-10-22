@@ -5,7 +5,6 @@ import { ENV } from '../config/env.ts';
 
 export const startOAuth = (req: Request, res: Response) => {
   const redirectUri = `${ENV.META_CONFIG.BACKEND_URL}/auth/meta/callback`;
-  console.log('🔗 Redirect URI (startOAuth):', redirectUri);
 
   const scopes = [
     'pages_show_list',
@@ -33,8 +32,8 @@ export const metaCallback = async (req: Request, res: Response) => {
 
   try {
     const redirectUri = `${ENV.META_CONFIG.BACKEND_URL}/auth/meta/callback`;
-    console.log('🔗 Redirect URI (callback):', redirectUri);
 
+    console.log('aaya');
     // 1️⃣ Short-lived token
     const tokenResp = await axios.get('https://graph.facebook.com/v24.0/oauth/access_token', {
       params: {
