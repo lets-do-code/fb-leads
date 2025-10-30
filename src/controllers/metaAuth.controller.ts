@@ -57,6 +57,7 @@ export const metaCallback = async (req: Request, res: Response) => {
     const redirectUri = `${ENV.META_CONFIG.BACKEND_URL}/api/v1/auth/meta/callback`;
     console.log('🔗 Redirect URI (callback):', redirectUri);
 
+    console.log('aaya');
     // 1️⃣ Short-lived token
     const tokenResp = await axios.get('https://graph.facebook.com/v24.0/oauth/access_token', {
       params: {
@@ -89,8 +90,8 @@ export const metaCallback = async (req: Request, res: Response) => {
 
     // const pages = pagesResp.data.data || [];
 
-    // console.log('Pages response :', pagesResp);
-    // console.log('Pages data :', pagesResp.data);
+    console.log('Pages response :', pagesResp);
+    console.log('Pages data :', pagesResp.data);
     // console.log('Pages data dataa :', pagesResp.data.data);
     // console.log('Pages data account:', pagesResp.data.accounts);
     // console.log('Pages data account data:', pagesResp.data.accounts.data);

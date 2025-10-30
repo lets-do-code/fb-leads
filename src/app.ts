@@ -29,6 +29,14 @@ app.use(API_PREFIX, router);
 app.get(
   '/',
   asyncHandler(async (req, res) => {
+    // const collections = await mongoose?.connection?.db?.listCollections().toArray();
+
+    // const data = await mongoose?.connection?.db?.collection('Zucks_profile').insertOne({
+    //   name: 'sushil',
+    //   email: 'sushil@example.com',
+    //   password: '123'
+    // });
+
     httpResponse(req, res, 200, 'Server is working fine🥳🥳');
   })
 );

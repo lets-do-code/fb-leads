@@ -1,7 +1,1 @@
-{
-  "root": [
-    "./src/app.ts",
-    "./src/index.ts"
-  ],
-  "version": "5.9.3"
-}
+{"root":["./src/app.ts","./src/index.ts","./src/config/db.ts","./src/config/env.ts","./src/config/nodemailer.ts","./src/config/swagger.ts","./src/constants/apipaths.ts","./src/constants/application.ts","./src/constants/responsemessage.ts","./src/controllers/integration.controller.ts","./src/controllers/metaauth.controller.ts","./src/controllers/metadata.controller.ts","./src/controllers/user.controller.ts","./src/controllers/webhook.controller.ts","./src/middleware/authmiddleware.ts","./src/middleware/globalerrorhandler.ts","./src/models/pageconnection.model.ts","./src/models/integration.model.ts","./src/models/otp.model.ts","./src/models/user.model.ts","./src/routes/index.ts","./src/routes/integration.route.ts","./src/routes/meta.route.ts","./src/routes/metaauth.route.ts","./src/routes/webhook.route.ts","./src/types/types.ts","./src/utils/asynchhandler.ts","./src/utils/errorhandler.ts","./src/utils/getndid.ts","./src/utils/httperror.ts","./src/utils/httpresponse.ts","./src/utils/methodnotallowed.ts","./src/utils/sendmail.ts"],"version":"5.9.3"}
