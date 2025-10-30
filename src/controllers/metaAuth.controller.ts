@@ -1,9 +1,9 @@
 import axios from 'axios';
-import PageConnection from '../models/PageConnection.model.ts';
+import PageConnection from '../models/PageConnection.model';
 import { Request, Response } from 'express';
-import { ENV } from '../config/env.ts';
+import { ENV } from '../config/env';
 import jwt from 'jsonwebtoken';
-import IntegrationModel from '../models/integration.model.ts';
+import IntegrationModel from '../models/integration.model';
 export const startOAuth = (req: Request, res: Response) => {
   const { ndid } = req.query;
   console.log(ndid);

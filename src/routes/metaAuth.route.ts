@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { metaCallback, startOAuth } from '../controllers/metaAuth.controller.ts';
+import { metaCallback, startOAuth } from '../controllers/metaAuth.controller';
 const authRouter: Router = Router();
 
 authRouter.get('/meta/start', startOAuth);

@@ -1,6 +1,6 @@
-import app from './app.ts';
-import connecctDB from './config/db.ts';
-import { ENV } from './config/env.ts';
+import app from './app';
+import connecctDB from './config/db';
+import { ENV } from './config/env';
 
 const PORT = ENV.PORT || 8084;
 

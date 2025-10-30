@@ -9,11 +9,12 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "declaration": true,
+    "declaration": false,
     "sourceMap": false,
     "removeComments": true,
-    "emitDeclarationOnly": true,
-    "allowImportingTsExtensions": true
+    "emitDeclarationOnly": false,
+    // "allowImportingTsExtensions": true,
+    "noEmit": false,
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
