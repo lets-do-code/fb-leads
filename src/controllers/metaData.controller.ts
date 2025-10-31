@@ -79,6 +79,33 @@ export const getAccounts=async(req:MyRequest,res:Response)=>{
     
   }
 }
+
+export const getForms=async(req:MyRequest,res:Response)=>{
+  try {
+    const { pageId } = req.query;
+    const user = req?.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const ndid = await getNdid(user?.Email);
+    const connection = await PageConnectionModel.findOne(
+        { ndid: ndid, "pages.id": pageId }, // match document containing the page
+        { "pages.$": 1 } // project only the matched element
+    );
+    if (!connection) return res.status(404).json({ error: 'Page not connected' });
+    
+    const data=connection?.pages[0]
+    const pageAccessToken = data.access_token;
+    const formsResp = await axios.get(`https://graph.facebook.com/v24.0/${pageId}/leadgen_forms`, {
+      params: { access_token: pageAccessToken }
+    });
+    res.json({ forms: formsResp.data.data });
+  } catch (err) {
+    // console.error('❌ Error fetching forms:', err.response?.data || err.message);
+    res.status(500).json({ error: 'Failed to fetch forms' });
+  }
+};
+
 export const getLeads = async (req: MyRequest, res: Response) => {
   try {
     const { pageId } = req.query;

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAccounts, getLeads } from '../controllers/metaData.controller';
+import { getAccounts, getForms, getLeads } from '../controllers/metaData.controller';
 import { authMiddleware } from '../middleware/authmiddleware';
 // import { updateNdid } from '../controllers/metaData.controller';
 const metaRouter = Router();
@@ -8,5 +8,6 @@ const metaRouter = Router();
 // metaRouter.get('/messages', getMessages);
 metaRouter.get('/leads',authMiddleware, getLeads);
 metaRouter.get('/accounts',authMiddleware, getAccounts);
+metaRouter.get('/forms',authMiddleware, getForms);
 // metaRouter.get('/connected-page', getConnectedPage);
 export default metaRouter;
