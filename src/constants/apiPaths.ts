@@ -4,5 +4,6 @@ export const ROUTES_PATH = {
   META: '/meta',
   AUTH: '/auth',
   WEBHOOK: '/webhook',
-  INTEGRATION: '/integration'
+  INTEGRATION: '/integration',
+  CALL:'/call'
 };
