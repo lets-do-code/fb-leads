@@ -13,6 +13,36 @@ type MyRequest = Request & {
 };
 
 
+export const checkConnectionStatus=async(req:MyRequest,res:Response)=>{
+  try {
+    const user = req?.user;
+    const data = req.body;
+
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const ndid = await getNdid(user?.Email);
+    if (!ndid) {
+      return res.status(400).json({ error: 'Failed to resolve NDID for user' });
+    }
+
+    const isExist=await ExotelModel.findOne({ndid:ndid})
+    if(isExist){
+      httpResponse(req,res,200,'🔐 Exotel credentials encrypted & saved successfully',{
+        status:true
+      });
+    }
+    else{
+      httpResponse(req,res,404,'🔐 Does not exist',{
+        status:false
+      });
+    }
+  }
+  catch(error:any){
+    return res.status(500).json({ error: `Failed to connect Exotel: ${error.message || error}` });
+  }
+}
 export const connectExotel = async (req: MyRequest, res: Response) => {
   try {
     const user = req?.user;
