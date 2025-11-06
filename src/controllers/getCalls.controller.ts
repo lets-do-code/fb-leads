@@ -93,7 +93,7 @@ export const connectExotel = async (req: MyRequest, res: Response) => {
     httpResponse(req,res,200,'🔐 Exotel credentials encrypted & saved successfully',{
         docs:encryptedData
     });
-
+    // check
   } catch (error: any) {
     console.error('Error connecting Exotel:', error);
     return res.status(500).json({ error: `Failed to connect Exotel: ${error.message || error}` });
